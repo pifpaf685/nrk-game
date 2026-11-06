@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#dceff8">
+  <title>НРК — пригода на колесах</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-page">
+    <header class="page-head">
+      <span class="brand">НРК<span class="brand-star">✳</span></span>
+      <span class="page-caption">МАЛЕНЬКА ПРИГОДА НА ВЕЛИКИХ КОЛЕСАХ</span>
+      <button class="sound-button" id="soundButton" type="button" aria-label="Увімкнути звук">♫ <span>ЗВУК ВИМК.</span></button>
+    </header>
+
+    <section class="stage" id="stage" aria-label="Ігрове поле НРК">
+      <canvas id="game" width="1400" height="560" aria-label="Платформна гра про робота НРК"></canvas>
+      <div class="grain" aria-hidden="true"></div>
+      <div class="hud" id="hud" hidden>
+        <div class="hud-badge"><span class="hud-logo">НРК</span><span class="level-label" id="levelLabel">РІВЕНЬ 1</span><span class="nut-icon" id="progressIcon">⬡</span><strong id="nutCount">0 / 10</strong></div>
+        <div class="hud-right"><span id="timeDisplay">00:00</span><button type="button" id="pauseButton" aria-label="Пауза">Ⅱ</button></div>
+      </div>
+
+      <div class="overlay intro" id="intro">
+        <img src="Зображення ChatGPT 6 жовт. 2026 р., 18_01_26.png" alt="Мальований концепт рівня НРК з роботом, платформами, гайками і фінішем">
+        <div class="intro-shade"></div>
+        <div class="intro-content">
+          <p class="eyebrow">МАЛЬОВАНА ПЛАТФОРМНА ПРИГОДА</p>
+          <h1>НРК <span>їде до фінішу!</span></h1>
+          <p>Обери маршрут, збирай гайки й відкривай фізику в русі.</p>
+          <div class="level-select" aria-label="Вибір рівня">
+            <button class="level-button level-button--active" type="button" data-level="0" id="startButton"><b>01</b><span>СТАРТОВА СТЕЖКА<small>сила і рух</small></span><i>↗</i></button>
+            <button class="level-button" type="button" data-level="1"><b>02</b><span>МАЙСТЕРНЯ НА СХИЛІ<small>шлях, швидкість і час</small></span><i>↗</i></button>
+            <button class="level-button" type="button" data-level="2"><b>03</b><span>СТЕЖКА НАД ХМАРАМИ<small>тертя і зчеплення</small></span><i>↗</i></button>
+            <button class="level-button level-button--exam" type="button" data-level="3"><b>04</b><span>ЕКЗАМЕН КОМБАТА<small>90 секунд · формули</small></span><i>↗</i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay panel-overlay" id="pauseOverlay" hidden>
+        <div class="paper-panel"><p class="eyebrow">ЗУПИНКА НА МАРШРУТІ</p><h2>Пауза</h2><p>Колеса почекають.</p><div class="panel-actions"><button class="primary-button" id="resumeButton" type="button">ПРОДОВЖИТИ ↗</button><button class="secondary-button" id="restartFromPause" type="button">СПОЧАТКУ</button></div></div>
+      </div>
+
+      <div class="overlay panel-overlay" id="finishOverlay" hidden>
+        <div class="paper-panel"><p class="eyebrow">МІСІЮ ВИКОНАНО</p><h2>Фініш! ★</h2><p id="finishSummary"></p><div class="panel-actions"><button class="primary-button" id="playAgainButton" type="button">ЩЕ ОДИН ЗАЇЗД ↗</button><button class="secondary-button" id="levelSelectButton" type="button">ІНШИЙ РІВЕНЬ</button></div></div>
+      </div>
+
+      <div class="overlay exam-overlay" id="examOverlay" hidden aria-live="assertive">
+        <div class="exam-sheet">
+          <p class="eyebrow">КОНТРОЛЬНА ТОЧКА <span id="examStep">1 / 3</span></p>
+          <p class="exam-instruction">Впиши пропущену літеру формули</p>
+          <div class="exam-formula" id="examFormula">F = □ · a</div>
+          <input id="examInput" inputmode="text" maxlength="1" autocomplete="off" autocapitalize="characters" aria-label="Пропущена літера формули">
+          <div class="exam-answers" aria-label="Варіанти відповіді"><button type="button" data-answer="m">m</button><button type="button" data-answer="v">v</button><button type="button" data-answer="N">N</button></div>
+          <p class="exam-hint">Натисни одну літеру або обери її.</p>
+        </div>
+      </div>
+
+      <div class="overlay discipline-overlay" id="disciplineOverlay" hidden>
+        <div class="discipline-card">
+          <img class="commander-art" src="assets/kombat-angry.gif" alt="Злий комбат, який моргає і рухає ротом">
+          <p class="eyebrow">КАБІНЕТ КОМБАТА</p>
+          <h2>Догана блять</h2>
+          <p id="disciplineReason">Помилка у формулі.</p>
+          <div class="panel-actions"><button class="primary-button" id="examAgainButton" type="button">СКЛАСТИ ЩЕ РАЗ ↗</button><button class="secondary-button" id="examLevelSelectButton" type="button">ІНШИЙ РІВЕНЬ</button></div>
+        </div>
+      </div>
+
+      <div class="rotate-note">↻ Поверни телефон горизонтально для зручної гри</div>
+    </section>
+
+    <nav class="touch-controls" aria-label="Сенсорне керування">
+      <div class="movement"><button type="button" data-control="left" aria-label="Ліворуч">←</button><button type="button" data-control="right" aria-label="Праворуч">→</button></div>
+      <button class="jump-button" type="button" data-control="jump">↑ <span>СТРИБОК</span></button>
+    </nav>
+
+    <footer class="help"><span><kbd>←</kbd> <kbd>→</kbd> або <kbd>A</kbd> <kbd>D</kbd> — рух</span><span><kbd>↑</kbd> / <kbd>W</kbd> / <kbd>Space</kbd> — стрибок</span><span><kbd>Esc</kbd> — пауза · <kbd>R</kbd> — спочатку</span></footer>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
